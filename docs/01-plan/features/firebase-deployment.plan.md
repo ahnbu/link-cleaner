@@ -1,29 +1,33 @@
-# [Plan] Firebase Hosting 배포 (Firebase Hosting Deployment)
+# [Plan] GitHub Actions를 이용한 Firebase 자동 배포 (GitHub Actions Firebase Deployment)
 
 ## 1. 개요 (Overview)
-개발이 완료된 Link Cleaner 프로젝트를 Firebase Hosting을 통해 전 세계에 서비스할 수 있도록 배포 환경을 구축하고 실행합니다.
+GitHub 저장소에 코드가 푸시되거나 병합될 때 자동으로 Firebase Hosting에 배포되는 CI/CD 환경을 구축합니다. 이를 통해 수동 배포의 번거로움을 줄이고 항상 최신 코드가 서비스에 반영되도록 합니다.
 
 ## 2. 요구 사항 (Requirements)
-- **Firebase CLI**: Firebase 명령어를 실행하기 위한 도구 설치 및 로그인.
-- **Hosting 설정**: Vite 프로젝트 구조(`dist` 폴더)에 맞는 호스팅 초기화.
-- **프로덕션 빌드**: 최적화된 정적 파일 생성.
-- **배포 실행**: 실제 호스팅 서버로 파일 업로드 및 URL 확인.
+- **Firebase CLI**: `firebase-tools` 설치 및 GitHub 연동 설정.
+- **GitHub 저장소**: 프로젝트가 업로드된 GitHub 저장소 권한.
+- **빌드 스크립트**: `npm run build`를 통한 프로덕션 빌드 정상 작동 여부.
+- **Secrets 관리**: GitHub Actions에서 사용할 Firebase 서비스 계정 키 등록.
 
 ## 3. 해결 방안 (Proposed Solutions)
-- `firebase-tools`를 사용하여 프로젝트를 초기화합니다.
-- Vite의 기본 빌드 결과물인 `dist` 폴더를 public 디렉토리로 설정합니다.
-- SPA(Single Page Application) 설정을 활성화하여 라우팅 문제를 방지합니다.
-- `npm run build` 후 `firebase deploy` 명령어를 순차적으로 실행합니다.
+- `firebase init hosting:github` 명령어를 사용하여 자동 배포 워크플로우를 생성합니다.
+- 메인 브랜치(`main`) 병합 시 운영 채널로 자동 배포되도록 설정합니다.
+- Pull Request 생성 시 미리보기(Preview) 채널로 자동 배포하여 변경 사항을 사전 검증합니다.
+- GitHub Secrets에 `FIREBASE_SERVICE_ACCOUNT` 키를 자동으로 등록하여 보안을 유지합니다.
 
 ## 4. 작업 목록 (Tasks)
-- [ ] Firebase CLI 설치 및 로그인 (`firebase login`)
-- [ ] Firebase 프로젝트 초기화 (`firebase init hosting`)
-    - Public directory: `dist`
-    - SPA rewrite: `Yes`
-- [ ] 프로덕션 빌드 수행 (`npm run build`)
-- [ ] Firebase 배포 수행 (`firebase deploy`)
-- [ ] 최종 배포 URL 접속 및 동작 검증
+- [ ] 로컬 빌드 검증 (`npm run build`)
+- [ ] Firebase CLI를 통한 GitHub Action 설정 (`firebase init hosting:github`)
+    - GitHub 로그인 및 저장소 선택
+    - 빌드 스크립트 설정: `npm ci && npm run build`
+    - PR 병합 시 자동 배포 설정 (Yes)
+    - PR 생성 시 미리보기 배포 설정 (Yes)
+- [ ] 생성된 워크플로우 파일 확인 (`.github/workflows/*.yml`)
+- [ ] GitHub 저장소의 Secrets 등록 여부 확인
+- [ ] 테스트 브랜치 생성 및 푸시를 통한 자동 배포 검증
+- [ ] 메인 브랜치 병합을 통한 실제 사이트 반영 확인
 
 ## 5. 예상 결과 (Expected Outcome)
-- `https://[project-id].web.app` 형태의 공용 URL을 통해 서비스 접속 가능.
-- 로컬 환경과 동일한 기능이 배포 환경에서도 정상 작동함.
+- 코드가 `main` 브랜치에 반영되면 자동으로 Firebase Hosting에 배포됨.
+- PR 생성 시마다 전용 미리보기 URL이 생성되어 협업 및 검증이 용이해짐.
+- 배포 이력이 GitHub Actions 탭에서 투명하게 관리됨.

@@ -1,7 +1,9 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-08T06:20:42.363Z",
-  "activeFeatures": ["cleansing-logic-enhancement"],
+  "lastUpdated": "2026-02-08T06:44:57.804Z",
+  "activeFeatures": [
+    "cleansing-logic-enhancement"
+  ],
   "primaryFeature": "cleansing-logic-enhancement",
   "features": {
     "cleansing-logic-enhancement": {
@@ -38,9 +40,9 @@
     "phaseHistory": []
   },
   "session": {
-    "startedAt": "2026-02-08T06:21:04.249Z",
+    "startedAt": "2026-02-08T06:44:58.076Z",
     "onboardingCompleted": true,
-    "lastActivity": "2026-02-08T06:21:04.249Z"
+    "lastActivity": "2026-02-08T06:44:58.076Z"
   },
   "history": [
     {
@@ -53,6 +55,12 @@
       "timestamp": "2026-02-08T06:20:42.363Z",
       "action": "session_end",
       "feature": null,
+      "details": "Session ended"
+    },
+    {
+      "timestamp": "2026-02-08T06:44:57.804Z",
+      "action": "session_end",
+      "feature": "cleansing-logic-enhancement",
       "details": "Session ended"
     }
   ]
