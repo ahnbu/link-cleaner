@@ -5,6 +5,7 @@ export interface CleansingConfig {
   simplifyFormatting: boolean; // e.g., remove ⭐, excessive bolding
   preserveHeaders: boolean;
   language: 'ko' | 'en' | 'auto';
+  useAI: boolean;
 }
 
 export interface ProcessingState {

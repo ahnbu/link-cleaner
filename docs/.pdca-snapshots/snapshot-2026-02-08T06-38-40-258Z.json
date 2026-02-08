@@ -1,7 +1,9 @@
 {
   "version": "2.0",
   "lastUpdated": "2026-02-08T06:20:42.363Z",
-  "activeFeatures": ["cleansing-logic-enhancement"],
+  "activeFeatures": [
+    "cleansing-logic-enhancement"
+  ],
   "primaryFeature": "cleansing-logic-enhancement",
   "features": {
     "cleansing-logic-enhancement": {
@@ -55,5 +57,7 @@
       "feature": null,
       "details": "Session ended"
     }
-  ]
+  ],
+  "_snapshotTimestamp": "2026-02-08T06:38:40.258Z",
+  "_reason": "pre-compress"
 }
