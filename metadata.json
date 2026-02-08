@@ -1,5 +1,5 @@
 {
-  "name": "Markdown Cleanser AI",
-  "description": "A sophisticated tool to remove citation links, footnotes, and excessive formatting from Perplexity and NotebookLM exports using Gemini AI.",
+  "name": "Link Cleaner",
+  "description": "Perplexity, NotebookLM 등의 AI 도구에서 생성된 불필요한 인용 링크와 노이즈를 제거해주는 도구입니다.",
   "requestFramePermissions": []
 }

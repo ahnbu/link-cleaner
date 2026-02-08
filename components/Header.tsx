@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface HeaderProps {
@@ -15,15 +14,18 @@ const Header: React.FC<HeaderProps> = ({ onReset }) => {
           </svg>
         </div>
         <h1 className="text-xl font-bold tracking-tight text-slate-800">
-          Cleanse<span className="text-indigo-600">AI</span>
+          Link <span className="text-indigo-600">Cleaner</span>
         </h1>
       </div>
       
       <button 
         onClick={onReset}
-        className="text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors"
+        className="flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-indigo-600 transition-all duration-200 shadow-sm active:scale-95"
       >
-        New Document
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4"></path>
+        </svg>
+        <span>새 문서</span>
       </button>
     </header>
   );

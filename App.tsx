@@ -1,10 +1,8 @@
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CleansingConfig, ProcessingState } from './types';
 import { cleanseText } from './services/geminiService';
 import Header from './components/Header';
 import FileUploader from './components/FileUploader';
-import CleansingOptions from './components/CleansingOptions';
 import MarkdownPreview from './components/MarkdownPreview';
 
 const App: React.FC = () => {
@@ -16,30 +14,21 @@ const App: React.FC = () => {
     fileName: null,
   });
 
-  const [config, setConfig] = useState<CleansingConfig>({
+  const [isCopied, setIsCopied] = useState(false);
+
+  // Default config without UI control
+  const config: CleansingConfig = {
     removeCitationLinks: true,
     removeFootnoteMarkers: true,
     simplifyFormatting: true,
     preserveHeaders: true,
     language: 'auto',
-  });
-
-  const handleFileUpload = (content: string, name: string) => {
-    setState(prev => ({
-      ...prev,
-      originalContent: content,
-      cleansedContent: null,
-      fileName: name,
-      error: null
-    }));
   };
 
-  const handleCleansing = async () => {
-    if (!state.originalContent) return;
-
+  const triggerCleansing = async (content: string) => {
     setState(prev => ({ ...prev, isCleansing: true, error: null }));
     try {
-      const result = await cleanseText(state.originalContent, config);
+      const result = await cleanseText(content, config);
       setState(prev => ({
         ...prev,
         cleansedContent: result,
@@ -54,13 +43,26 @@ const App: React.FC = () => {
     }
   };
 
+  const handleFileUpload = (content: string, name: string) => {
+    setState(prev => ({
+      ...prev,
+      originalContent: content,
+      cleansedContent: null,
+      fileName: name,
+      error: null
+    }));
+    triggerCleansing(content);
+  };
+
   const handleDownload = () => {
     if (!state.cleansedContent) return;
     const blob = new Blob([state.cleansedContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `cleansed_${state.fileName || 'document.md'}`;
+    // Enforce .md extension
+    const baseName = state.fileName ? state.fileName.replace(/\.[^/.]+$/, "") : 'document';
+    a.download = `cleansed_${baseName}.md`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -68,7 +70,8 @@ const App: React.FC = () => {
   const handleCopy = () => {
     if (!state.cleansedContent) return;
     navigator.clipboard.writeText(state.cleansedContent);
-    alert('Copied to clipboard!');
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   const handleReset = () => {
@@ -79,6 +82,7 @@ const App: React.FC = () => {
       originalContent: null,
       fileName: null,
     });
+    setIsCopied(false);
   };
 
   return (
@@ -86,92 +90,99 @@ const App: React.FC = () => {
       <div className="w-full max-w-5xl">
         <Header onReset={handleReset} />
         
-        {!state.originalContent ? (
-          <div className="mt-12">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">Cleanse Your AI Output</h2>
+        <div className="flex flex-col space-y-8 mt-12">
+          {!state.originalContent && (
+             <div className="text-center mb-4">
+              <h2 className="text-3xl font-bold text-slate-800 mb-4">AI 문서 클렌징</h2>
               <p className="text-slate-500 max-w-xl mx-auto">
-                Upload text or markdown files to automatically remove Perplexity citations, 
-                NotebookLM formatting noise, and redundant source links.
+                텍스트나 마크다운 파일을 업로드하면 Perplexity 인용 링크, 
+                NotebookLM 형식 노이즈 및 중복된 출처 링크를 자동으로 제거합니다.
               </p>
             </div>
+          )}
+          
+          {!state.originalContent && (
             <FileUploader onUpload={handleFileUpload} />
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-            {/* Left Column: Settings and Action */}
-            <div className="lg:col-span-1 space-y-6">
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <CleansingOptions config={config} onChange={setConfig} disabled={state.isCleansing} />
-                
-                <button
-                  onClick={handleCleansing}
-                  disabled={state.isCleansing}
-                  className={`w-full mt-6 py-4 rounded-xl font-bold text-white transition-all transform active:scale-95 ${
-                    state.isCleansing 
-                      ? 'bg-slate-400 cursor-not-allowed' 
-                      : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200'
-                  }`}
-                >
-                  {state.isCleansing ? (
-                    <span className="flex items-center justify-center">
-                      <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Cleansing...
-                    </span>
-                  ) : 'Start Cleansing'}
-                </button>
-                
-                {state.error && (
-                  <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">
-                    {state.error}
-                  </div>
-                )}
-              </div>
+          )}
 
-              {state.cleansedContent && (
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-                  <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Actions</h3>
-                  <button 
-                    onClick={handleCopy}
-                    className="w-full flex items-center justify-center space-x-2 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors font-medium"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                    <span>Copy to Clipboard</span>
-                  </button>
-                  <button 
-                    onClick={handleDownload}
-                    className="w-full flex items-center justify-center space-x-2 py-3 bg-indigo-50 text-indigo-700 rounded-xl hover:bg-indigo-100 transition-colors font-medium border border-indigo-100"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    <span>Download Markdown</span>
-                  </button>
-                </div>
-              )}
-            </div>
+          {/* Loading State Overlay or Indicator */}
+          {state.isCleansing && (
+             <div className="w-full py-12 flex flex-col items-center justify-center bg-white rounded-3xl border border-slate-200 shadow-sm animate-pulse">
+                <svg className="animate-spin h-10 w-10 text-indigo-600 mb-4" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p className="text-slate-600 font-medium">AI가 문서를 깨끗하게 정리하고 있습니다...</p>
+             </div>
+          )}
 
-            {/* Right Column: Previewer */}
-            <div className="lg:col-span-2 space-y-4">
+          {state.error && (
+             <div className="w-full p-4 bg-red-50 text-red-600 rounded-xl text-center border border-red-100">
+               {state.error}
+               <button onClick={handleReset} className="ml-4 text-sm underline hover:text-red-800">다시 시도</button>
+             </div>
+          )}
+
+          {/* 2. Results Area (Vertical Layout) */}
+          {!state.isCleansing && state.originalContent && state.cleansedContent && (
+            <div className="flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-500">
+              
+              {/* Original */}
               <MarkdownPreview 
-                title="Original Content"
+                title="원본 내용"
                 content={state.originalContent}
                 isProcessed={false}
               />
               
-              {state.cleansedContent && (
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <MarkdownPreview 
-                    title="Cleansed Content"
-                    content={state.cleansedContent}
-                    isProcessed={true}
-                  />
-                </div>
-              )}
+              {/* Cleansed */}
+              <MarkdownPreview 
+                title="정리된 내용"
+                content={state.cleansedContent}
+                isProcessed={true}
+              />
+
+              {/* Actions Toolbar */}
+              <div className="sticky bottom-8 z-10 mx-auto w-full max-w-2xl bg-white/80 backdrop-blur-md p-2 rounded-2xl shadow-xl border border-slate-200/60 flex items-center justify-between space-x-2">
+                 <button 
+                    onClick={handleReset}
+                    className="px-6 py-3 text-slate-500 hover:text-slate-700 font-medium text-sm transition-colors"
+                  >
+                    새로 시작하기
+                  </button>
+                  <div className="flex items-center space-x-3">
+                    <button 
+                      onClick={handleCopy}
+                      className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${
+                        isCopied 
+                          ? 'bg-green-100 text-green-700 border border-green-200' 
+                          : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      {isCopied ? (
+                         <>
+                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                           <span>복사 완료!</span>
+                         </>
+                      ) : (
+                         <>
+                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                           <span>클립보드 복사</span>
+                         </>
+                      )}
+                    </button>
+                    <button 
+                      onClick={handleDownload}
+                      className="flex items-center space-x-2 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 font-medium"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                      <span>.md 다운로드</span>
+                    </button>
+                  </div>
+              </div>
+
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

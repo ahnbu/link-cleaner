@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 
 interface FileUploaderProps {
@@ -65,8 +64,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUpload }) => {
         </svg>
       </div>
       
-      <p className="text-lg font-medium text-slate-600">Click to upload or drag & drop</p>
-      <p className="text-sm text-slate-400 mt-2">Supports .txt, .md files</p>
+      <p className="text-lg font-medium text-slate-600">클릭하여 업로드하거나 파일을 여기로 끌어다 놓으세요</p>
+      <p className="text-sm text-slate-400 mt-2">.txt, .md 파일을 지원합니다</p>
     </div>
   );
 };

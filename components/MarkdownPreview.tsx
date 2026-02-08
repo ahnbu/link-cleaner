@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface MarkdownPreviewProps {
@@ -14,7 +13,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ title, content, isPro
         <h3 className="text-sm font-bold text-slate-700">{title}</h3>
         {isProcessed && (
           <span className="text-[10px] bg-green-200 text-green-800 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
-            Cleansed
+            정리됨
           </span>
         )}
       </div>
@@ -22,7 +21,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ title, content, isPro
         <textarea
           readOnly
           value={content || ''}
-          placeholder="Document content will appear here..."
+          placeholder="문서 내용이 여기에 표시됩니다..."
           className="w-full h-64 lg:h-[300px] bg-transparent resize-none text-slate-600 font-mono text-sm focus:outline-none scrollbar-thin"
         />
       </div>
