@@ -153,7 +153,7 @@ const App: React.FC = () => {
             </div>
 
             {/* Right Column: Previewer */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4">
               <MarkdownPreview 
                 title="Original Content"
                 content={state.originalContent}
@@ -173,10 +173,6 @@ const App: React.FC = () => {
           </div>
         )}
       </div>
-      
-      <footer className="mt-16 text-slate-400 text-sm pb-8">
-        Designed for AI Workflows & Clean Documentation.
-      </footer>
     </div>
   );
 };

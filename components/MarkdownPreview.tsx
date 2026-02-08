@@ -23,7 +23,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ title, content, isPro
           readOnly
           value={content || ''}
           placeholder="Document content will appear here..."
-          className="w-full h-80 lg:h-[400px] bg-transparent resize-none text-slate-600 font-mono text-sm focus:outline-none scrollbar-thin"
+          className="w-full h-64 lg:h-[300px] bg-transparent resize-none text-slate-600 font-mono text-sm focus:outline-none scrollbar-thin"
         />
       </div>
     </div>
