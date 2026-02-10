@@ -22,6 +22,16 @@ const DECORATIVE_SYMBOL_REGEX = /[⭐]/g;
 const UNESCAPE_REGEX = /\\(?=[*#_\[\]])/g;
 
 /**
+ * Regex for Escaped Dot like \.
+ */
+const ESCAPED_DOT_REGEX = /\\\./g;
+
+/**
+ * Regex for Escaped Dashes like \----
+ */
+const ESCAPED_DASH_REGEX = /\\(-{3,})/g;
+
+/**
  * Cleanses text using Regex for fast processing.
  */
 export const cleanseTextLocally = (text: string, config: CleansingConfig): string => {
@@ -30,6 +40,8 @@ export const cleanseTextLocally = (text: string, config: CleansingConfig): strin
   // 1. Unescape characters first so other regex can match easily
   if (config.simplifyFormatting) {
     result = result.replace(UNESCAPE_REGEX, "");
+    result = result.replace(ESCAPED_DOT_REGEX, ".");
+    result = result.replace(ESCAPED_DASH_REGEX, "$1");
   }
 
   // 2. Remove decorative symbols
