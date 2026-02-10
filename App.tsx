@@ -105,7 +105,7 @@ const App: React.FC = () => {
         <div className="flex flex-col space-y-8 mt-12">
           {!state.originalContent && (
              <div className="text-center mb-4">
-              <h2 className="text-3xl font-bold text-slate-100 mb-4">AI 문서 클렌징</h2>
+              <h2 className="text-3xl font-bold text-slate-100 mb-4">AI 문서 클렌징 v1.1</h2>
               <p className="text-slate-400 max-w-xl mx-auto">
                 텍스트나 마크다운 파일을 업로드하면 Perplexity 인용 링크, 
                 NotebookLM 형식 노이즈 및 중복된 출처 링크를 자동으로 제거합니다.
