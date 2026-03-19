@@ -4,4 +4,5 @@
 
 | 일시 | 유형 | 범위 | 변경내용 (목적 포함) |
 |---|---|---|---|
-| YYYY-MM-DD HH:mm | feat/fix/refactor/docs/chore/other | area-or-folder | 변경 요약 — 변경 이유·목적 |
+| 2026-03-19 | chore | docs/image | 미사용 이미지 파일 삭제 — 불필요 리소스 정리 |
+| 2026-03-19 | chore | .gitignore | _handoff/ 패턴 추가 — 불필요 파일 추적 방지 |
