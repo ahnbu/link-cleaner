@@ -23,5 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 .pdca-snapshots/
-_handoff/
 
+.playwright-cli/
+.bkit/
+.pdca-status
+.pdca-status.json
+.bkit-memory
+.bkit-memory.json
+.pdca-snapshots
+.current-session-id
+.env
+temp/
+.temp/
