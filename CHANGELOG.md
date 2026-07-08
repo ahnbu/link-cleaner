@@ -4,6 +4,7 @@
 
 | 일시 | 유형 | 범위 | 변경내용 (목적 포함) |
 |---|---|---|---|
+| 2026-07-08 11:32 | chore | package-manager | package-lock.json을 제거하고 pnpm-lock.yaml을 추가해 패키지 매니저 lockfile을 pnpm 기준으로 정리 |
 | 2026-03-25 | chore | .gitignore | _handoff/ 항목 제거 — handoff git 추적 복원 |
 | 2026-03-19 | chore | docs/image | 미사용 이미지 파일 삭제 — 불필요 리소스 정리 |
 | 2026-03-19 | chore | .gitignore | _handoff/ 패턴 추가 — 불필요 파일 추적 방지 |
