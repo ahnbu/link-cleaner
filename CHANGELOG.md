@@ -4,6 +4,7 @@
 
 | 일시 | 유형 | 범위 | 변경내용 (목적 포함) |
 |---|---|---|---|
+| 2026-08-27 12:13 | chore | repo | gitignore에 이미 등재된 bkit·pdca 로컬 상태 파일 2건 추적 해제 |
 | 2026-07-22 17:55 | fix | pnpm-policy | preinstall 가드가 pnpm 자신을 차단하던 버그 수정 — npm_execpath 폴백 검사 추가 |
 | 2026-07-22 17:05 | chore | pnpm-policy | packageManager 고정 및 preinstall 가드 추가 — npm/yarn 혼용 차단 |
 | 2026-07-22 15:51 | docs | readme | 배포 정보 절 추가 - Gemini 키 미주입으로 기능 불능 상태, 클라이언트 노출 구조 경고 기록 |
