@@ -4,6 +4,7 @@
 
 | 일시 | 유형 | 범위 | 변경내용 (목적 포함) |
 |---|---|---|---|
+| 2026-09-03 20:06 | refactor | docs | docs/ 폴더를 _docs/로 이동 — 레포 간 문서 폴더명 통일 |
 | 2026-08-27 12:13 | chore | repo | gitignore에 이미 등재된 bkit·pdca 로컬 상태 파일 2건 추적 해제 |
 | 2026-07-22 17:55 | fix | pnpm-policy | preinstall 가드가 pnpm 자신을 차단하던 버그 수정 — npm_execpath 폴백 검사 추가 |
 | 2026-07-22 17:05 | chore | pnpm-policy | packageManager 고정 및 preinstall 가드 추가 — npm/yarn 혼용 차단 |
